@@ -1,0 +1,10 @@
+
+# dependencies
+node_modules
+.vscode
+bin
+.DS_Store
+wwwwroot
+obj
+publish
+.idea
