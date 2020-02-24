@@ -4,7 +4,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <UserSecretsId>1f9022d8-0a3c-46dc-a950-d700036c3429</UserSecretsId>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+<!--        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>-->
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Application\Application.csproj" />
