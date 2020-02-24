@@ -107,8 +107,8 @@ namespace API
             }
 
             // app.UseHttpsRedirection();
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+            // app.UseDefaultFiles();
+            // app.UseStaticFiles();
 
             app.UseRouting();
 
@@ -118,7 +118,9 @@ namespace API
             app.UseCors("CorsPolicy");
 
             // app.UseMvc();
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); endpoints.MapFallbackToController("Index", "Fallback"); });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); 
+                // endpoints.MapFallbackToController("Index", "Fallback"); 
+            });
         }
     }
 }
