@@ -2,6 +2,9 @@ using System.Text;
 using Application.Activities;
 using API.Middleware;
 using Application.Interfaces;
+using Application.Photos;
+using Application.User;
+using Application.Users;
 using AutoMapper;
 using Domain;
 using FluentValidation.AspNetCore;
@@ -48,9 +51,17 @@ namespace API
                 opt.AddPolicy("CorsPolicy",
                     policy => { policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"); });
             });
+            
+            // services.AddMediatR(typeof(Login.Handler).Assembly);
+            // services.AddMediatR(assembly);
 
             // configured mediatR
             services.AddMediatR(typeof(List.Handler).Assembly);
+            services.AddMediatR(typeof(Login.Handler).Assembly);
+            services.AddMediatR(typeof(Register.Handler).Assembly);
+            services.AddMediatR(typeof(Attend.Handler).Assembly);
+            services.AddMediatR(typeof(SetMain.Handler).Assembly);
+            services.AddMediatR(typeof(Details.Handler).Assembly);
             services.AddAutoMapper(typeof(List.Handler));
 
             // configured fluent API

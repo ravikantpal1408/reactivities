@@ -9,11 +9,11 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace Application.Users
+namespace Application.User
 {
     public class Login
     {
-        public class Query : IRequest<User>
+        public class Query : IRequest<Users.User>
         {
             public string Email { get; set; }
             public string Password { get; set; }
@@ -28,7 +28,7 @@ namespace Application.Users
             }
         }
 
-        public class Handler : IRequestHandler<Query, User>
+        public class Handler : IRequestHandler<Query, Users.User>
         {
             private readonly UserManager<AppUser> _userManager;
             private readonly SignInManager<AppUser> _signInManager;
@@ -43,7 +43,7 @@ namespace Application.Users
                 _jwtGenerator = jwtGenerator;
             }
 
-            public async Task<User> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Users.User> Handle(Query request, CancellationToken cancellationToken)
             {
                 // handler logic goes here
                 var user = await _userManager.FindByEmailAsync(request.Email);
@@ -58,7 +58,7 @@ namespace Application.Users
                 if (result.Succeeded)
                 {
                     // TODO : Generate Token
-                    return new User
+                    return new Users.User
                     {
                         DisplayName = user.DisplayName,
                         Token = _jwtGenerator.CreateToken(user),
