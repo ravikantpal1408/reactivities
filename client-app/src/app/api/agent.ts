@@ -1,9 +1,9 @@
-import axios, { AxiosResponse } from 'axios';
-import { IActivity } from '../models/activity';
-import { history } from '../..';
-import { toast } from 'react-toastify';
-import { IUser, IUserFormValues } from "../models/user";
-import { IProfile, IPhoto } from "../models/profile";
+import axios, {AxiosResponse} from 'axios';
+import {IActivity} from '../models/activity';
+import {history} from '../..';
+import {toast} from 'react-toastify';
+import {IUser, IUserFormValues} from "../models/user";
+import {IProfile, IPhoto} from "../models/profile";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
@@ -20,7 +20,7 @@ axios.interceptors.response.use(undefined, error => {
     if (error.message === 'Network Error' && !error.response) {
         toast.error('Network error - make sure API is running!')
     }
-    const { status, data, config } = error.response;
+    const {status, data, config} = error.response;
     if (status === 404) {
         history.push('/notfound')
     }
@@ -49,7 +49,7 @@ const requests = {
         formData.append('File', file)
         return axios.post(url, formData,
             {
-                headers: { 'Content-type': 'multipart/form-data' }
+                headers: {'Content-type': 'multipart/form-data'}
             }).then(responseBody)
     }
 };
@@ -67,14 +67,16 @@ const Activities = {
 const User = {
     currentUser: (): Promise<IUser> => requests.get('/user'),
     login: (user: IUserFormValues): Promise<IUser> => requests.post(`/user/login`, user),
-    register: (user: IUserFormValues): Promise<IUser> => requests.post(`/user/register`, user)
+    register: (user: IUserFormValues): Promise<IUser> => requests.post(`/user/register`, user),
+
 };
 
 const Profile = {
     get: (username: string): Promise<IProfile> => requests.get(`/profiles/${username}`),
     uploadPhoto: (photo: Blob): Promise<IPhoto> => requests.postForm(`/photos`, photo),
     setMain: (id: string) => requests.post(`/photos/${id}/setMain`, {}),
-    deletePhoto: (id: string) => requests.del(`/photos/${id}`)
+    deletePhoto: (id: string) => requests.del(`/photos/${id}`),
+    editProfile: (profile: Partial<IProfile>) => requests.put(`/profiles`, profile)
 };
 
 export default {

@@ -22,5 +22,7 @@ namespace API.Controllers {
         public async Task<ActionResult<User>> CurrentUser () {
             return await Mediator.Send (new CurrentUser.Query ());
         }
+        
+       
     }
 }

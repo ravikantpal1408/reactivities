@@ -1,8 +1,8 @@
-import { RootStore } from "./rootStore";
-import { action, computed, observable, runInAction } from "mobx";
-import { IProfile, IPhoto } from "../models/profile";
+import {RootStore} from "./rootStore";
+import {action, computed, observable, runInAction} from "mobx";
+import {IProfile, IPhoto} from "../models/profile";
 import agent from "../api/agent";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 
 export default class ProfileStore {
     rootStore: RootStore;
@@ -44,7 +44,7 @@ export default class ProfileStore {
             console.log('error happened : ', error)
 
         }
-    }
+    };
 
     @action uploadPhoto = async (file: Blob) => {
         try {
@@ -70,7 +70,7 @@ export default class ProfileStore {
             })
         }
 
-    }
+    };
 
     @action setMainPhoto = async (photo: IPhoto) => {
         this.loading = true;
@@ -89,7 +89,21 @@ export default class ProfileStore {
                 this.loading = false;
             });
         }
-    }
+    };
+
+    @action updateProfile = async (profile: Partial<IProfile>) => {
+        try {
+            await agent.Profile.editProfile(profile);
+            runInAction(() => {
+                if (profile.displayName !== this.rootStore.userStore.user!.displayName) {
+                    this.rootStore.userStore.user!.displayName = profile.displayName!;
+                    this.profile = {...this.profile!, ...profile};
+                }
+            });
+        } catch (error) {
+            toast.error("Problem updating profile");
+        }
+    };
 
 
     @action deletePhoto = async (photo: IPhoto) => {
