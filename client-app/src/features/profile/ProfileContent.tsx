@@ -13,7 +13,7 @@ const panes = [
 ];
 const ProfileContent = () => {
     return (
-        <Tab menu={{fluid: true, vertical: true}} menuPosition='right' panes={panes} activeIndex={0}/>
+        <Tab menu={{fluid: true, vertical: true}} menuPosition='right' panes={panes}/>
     )
 };
 
