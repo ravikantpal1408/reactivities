@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.Tasks;
 using Application.Activities;
 using API.Middleware;
 using API.SignalR;
@@ -100,6 +101,21 @@ namespace API
                     IssuerSigningKey = key,
                     ValidateAudience = false,
                     ValidateIssuer = false
+                };
+                opt.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        // checking that request contain access token and path contain - /chat
+                        if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chat")))
+                        {
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
 
