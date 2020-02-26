@@ -1,6 +1,7 @@
 using System.Text;
 using Application.Activities;
 using API.Middleware;
+using API.SignalR;
 using Application.Interfaces;
 using Application.Photos;
 using Application.User;
@@ -62,6 +63,7 @@ namespace API
             services.AddMediatR(typeof(Attend.Handler).Assembly);
             services.AddMediatR(typeof(SetMain.Handler).Assembly);
             services.AddMediatR(typeof(Details.Handler).Assembly);
+            services.AddSignalR();
             services.AddAutoMapper(typeof(List.Handler));
 
             // configured fluent API
@@ -129,7 +131,8 @@ namespace API
             app.UseCors("CorsPolicy");
 
             // app.UseMvc();
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); 
+            app.UseEndpoints(endpoints => { endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
                 // endpoints.MapFallbackToController("Index", "Fallback"); 
             });
         }
