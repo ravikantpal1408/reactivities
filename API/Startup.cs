@@ -51,9 +51,13 @@ namespace API
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy",
-                    policy => { policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"); });
+                    policy =>
+                    {
+                        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000")
+                            .AllowCredentials();
+                    });
             });
-            
+
             // services.AddMediatR(typeof(Login.Handler).Assembly);
             // services.AddMediatR(assembly);
 
@@ -147,7 +151,9 @@ namespace API
             app.UseCors("CorsPolicy");
 
             // app.UseMvc();
-            app.UseEndpoints(endpoints => { endpoints.MapControllers();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
                 endpoints.MapHub<ChatHub>("/chat");
                 // endpoints.MapFallbackToController("Index", "Fallback"); 
             });
