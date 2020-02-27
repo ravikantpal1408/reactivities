@@ -7,6 +7,7 @@ import {toast} from 'react-toastify';
 import {RootStore} from "./rootStore";
 import {createAttendee, setActivityProps} from "../common/util/util";
 import {HubConnection, HubConnectionBuilder, LogLevel} from "@microsoft/signalr";
+import {act} from "react-dom/test-utils";
 
 
 export default class ActivityStore {
@@ -22,29 +23,65 @@ export default class ActivityStore {
     @observable submitting = false;
     @observable target = '';
     @observable loading = false;
-    @observable.ref hubConnection: HubConnection | null = null;
+    @observable.ref hubConnection: HubConnection | null = null; // this observable is for signalR
 
 
-    @action createHubConnection = () => {
-        this.hubConnection = new HubConnectionBuilder()
-            .withUrl('http://localhost:5000/chat', {
-                accessTokenFactory: () => this.rootStore.commonStore.token!
-            })
-            .configureLogging(LogLevel.Information)
-            .build();
+    // create signalR hub connection 
+    @action createHubConnection = (activityId: string) => {
+        try {
+            this.hubConnection = new HubConnectionBuilder()
+                .withUrl('http://localhost:5000/chat', {
+                    accessTokenFactory: () => this.rootStore.commonStore.token!
+                })
+                .configureLogging(LogLevel.Information)
+                .build();
 
-        this.hubConnection.start().then(() =>
-            console.log(this.hubConnection!.state)
-        ).catch(error => console.log('Error establishing connection : ', error));
+            this.hubConnection
+                .start()
+                .then(() =>
+                    console.log(this.hubConnection!.state)
+                ).then(() => {
+                console.log('Attempting to join group !!');
+                // this will call method from ChatHub.cs file that is created on server
+                this.hubConnection!.invoke('AddToGroup', activityId);
 
-        // when we receive the comment
-        this.hubConnection.on('ReceiveComment', comment => {
-            this.activity!.comments.push(comment);
-        });
+            }).catch(error => console.log('Error establishing connection : ', error));
+
+            // when we receive the comment
+            this.hubConnection.on('ReceiveComment', comment => {
+                runInAction(() => {
+                    this.activity!.comments.push(comment);
+                });
+            });
+
+            this.hubConnection.on('Send', message => {
+                toast.info(message);
+            });
+        } catch (e) {
+            console.log('Some error happened');
+        }
     };
-    
+
+    // stop signalR hub connection 
     @action stopHubConnection = () => {
-      this.hubConnection!.stop();  
+        this.hubConnection!.invoke('RemoveFromGroup', this.activity!.id)
+            .then(() => {
+                this.hubConnection!.stop();
+            })
+            .then(() => console.log('Connection stopped'))
+            .catch(err => console.log('error happened while stopping a chat connection !'));
+
+    };
+
+    // add comment 
+    @action addComment = async (values: any) => {
+        values.activityId = this.activity!.id;
+        try {
+            await this.hubConnection!.invoke('SendComment', values);
+
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     @computed get activitiesByDate() {
@@ -127,6 +164,7 @@ export default class ActivityStore {
             let attendees = [];
             attendees.push(attendee);
             activity.userActivities = attendees;
+            activity.comments = [];
             activity.isHost = true;
             runInAction('create activity', () => {
                 this.activityRegistry.set(activity.id, activity);
