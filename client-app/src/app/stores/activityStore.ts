@@ -7,7 +7,7 @@ import {toast} from 'react-toastify';
 import {RootStore} from "./rootStore";
 import {createAttendee, setActivityProps} from "../common/util/util";
 import {HubConnection, HubConnectionBuilder, LogLevel} from "@microsoft/signalr";
-import {act} from "react-dom/test-utils";
+
 
 
 export default class ActivityStore {
