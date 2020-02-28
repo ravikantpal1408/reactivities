@@ -4,7 +4,7 @@ using Application.Activities;
 using API.Middleware;
 using API.SignalR;
 using Application.Interfaces;
-using Application.Photos;
+using Application.Profiles;
 using Application.User;
 using Application.Users;
 using AutoMapper;
@@ -25,6 +25,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
+
 
 namespace API
 {
@@ -67,7 +68,6 @@ namespace API
             services.AddMediatR(typeof(Register.Handler).Assembly);
             services.AddMediatR(typeof(Attend.Handler).Assembly);
             services.AddMediatR(typeof(SetMain.Handler).Assembly);
-            services.AddMediatR(typeof(Details.Handler).Assembly);
             services.AddSignalR();
             services.AddAutoMapper(typeof(List.Handler));
 
@@ -126,6 +126,7 @@ namespace API
 
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IProfileReader, ProfileReader>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
         }
