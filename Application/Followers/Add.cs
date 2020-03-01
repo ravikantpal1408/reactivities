@@ -43,7 +43,7 @@ namespace Application.Followers
 
                 var following =
                     await _context.Followings.SingleOrDefaultAsync(x =>
-                        x.ObserverId == observer.Id && x.TargetId == target.Id, cancellationToken: cancellationToken);
+                        x.ObserverId == observer.Id && x.TargetId == target.Id);
 
                 if (following != null)
                     throw new RestExceptions(HttpStatusCode.BadRequest,

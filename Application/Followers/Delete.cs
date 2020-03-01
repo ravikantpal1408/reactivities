@@ -32,16 +32,18 @@ namespace Application.Followers
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var observer =
-                    await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
+                    await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername(),
+                        cancellationToken: cancellationToken);
 
-                var target = await _context.Users.SingleOrDefaultAsync(x => x.UserName == request.Username);
+                var target = await _context.Users.SingleOrDefaultAsync(x => x.UserName == request.Username,
+                    cancellationToken: cancellationToken);
 
                 if (target == null)
                     throw new RestExceptions(HttpStatusCode.NotFound, new {User = "Not found"});
 
                 var following =
                     await _context.Followings.SingleOrDefaultAsync(x =>
-                        x.ObserverId == observer.Id && x.TargetId == target.Id);
+                        x.ObserverId == observer.Id && x.TargetId == target.Id, cancellationToken: cancellationToken);
 
                 if (following == null)
                     throw new RestExceptions(HttpStatusCode.BadRequest, new {User = "You are not following this user"});
@@ -51,7 +53,7 @@ namespace Application.Followers
                     _context.Followings.Remove(following);
                 }
 
-                var success = await _context.SaveChangesAsync() > 0;
+                var success = await _context.SaveChangesAsync(cancellationToken) > 0;
 
                 if (success) return Unit.Value;
 

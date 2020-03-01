@@ -151,7 +151,7 @@ export default class ProfileStore {
         this.loading = true;
         try {
 
-            await agent.Profile.follow(username);
+            await agent.Profile.unfollow(username);
             runInAction(() => {
                 this.profile!.following = false;
                 this.profile!.followingCount--;

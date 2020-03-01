@@ -53,8 +53,8 @@ const ProfileHeader: React.FC<IProps> = ({profile, isCurrentUser, follow, unfoll
                                 fluid
                                 basic
                                 color={profile.following ? 'red' : 'green'}
-                                content={profile.following ? 'Unfollow' : 'Follow'}
-                                onClick={profile.following ? () => unfollow(profile.username) : () => follow(profile.username)}
+                                content={profile.following ? 'Un-Follow' : 'Follow'}
+                                onClick={profile.following ? (() => unfollow(profile.username)) : (() => follow(profile.username))}
                             />
                         </Reveal.Content>
                     </Reveal>

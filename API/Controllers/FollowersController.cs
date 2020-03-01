@@ -6,7 +6,7 @@ using Application.Profiles;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API
+namespace API.Controllers
 {
     [Route("api/profiles")]
     public class FollowersController : BaseController
