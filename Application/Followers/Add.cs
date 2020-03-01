@@ -32,9 +32,11 @@ namespace Application.Followers
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var observer =
-                    await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
+                    await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername(),
+                        cancellationToken: cancellationToken);
 
-                var target = await _context.Users.SingleOrDefaultAsync(x => x.UserName == request.Username);
+                var target = await _context.Users.SingleOrDefaultAsync(x => x.UserName == request.Username,
+                    cancellationToken: cancellationToken);
 
                 if (target == null)
                     throw new RestExceptions(HttpStatusCode.NotFound, new {User = "Not found"});
