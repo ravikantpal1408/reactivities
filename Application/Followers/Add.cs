@@ -41,7 +41,7 @@ namespace Application.Followers
 
                 var following =
                     await _context.Followings.SingleOrDefaultAsync(x =>
-                        x.ObserverId == observer.Id && x.TargetId == target.Id);
+                        x.ObserverId == observer.Id && x.TargetId == target.Id, cancellationToken: cancellationToken);
 
                 if (following != null)
                     throw new RestExceptions(HttpStatusCode.BadRequest,
@@ -58,7 +58,7 @@ namespace Application.Followers
                     _context.Followings.Add(following);
                 }
 
-                var success = await _context.SaveChangesAsync() > 0;
+                var success = await _context.SaveChangesAsync(cancellationToken) > 0;
 
                 if (success) return Unit.Value;
 
