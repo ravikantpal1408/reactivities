@@ -1,3 +1,8 @@
+export interface IActivitiesEnvelope {
+    activities: IActivity[];
+    activityCount: number;
+}
+
 export interface IActivity {
     id: string;
     title: string;
@@ -8,12 +13,8 @@ export interface IActivity {
     venue: string;
     isGoing: boolean;
     isHost: boolean;
-    userActivities: IAttendee[];
+    attendees: IAttendee[];
     comments: IComment[];
-}
-
-export interface IActivityFormValues extends Partial<IActivity> {
-    time?: Date;
 }
 
 export interface IComment {
@@ -23,6 +24,10 @@ export interface IComment {
     username: string;
     displayName: string;
     image: string;
+}
+
+export interface IActivityFormValues extends Partial<IActivity> {
+    time?: Date;
 }
 
 export class ActivityFormValues implements IActivityFormValues {
@@ -43,10 +48,10 @@ export class ActivityFormValues implements IActivityFormValues {
     }
 }
 
-
 export interface IAttendee {
     username: string;
     displayName: string;
     image: string;
     isHost: boolean;
+    following?: boolean;
 }

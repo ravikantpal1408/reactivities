@@ -1,14 +1,23 @@
 export interface IProfile {
-    displayName: any,
-    username: any,
-    bio: any,
-    image: any,
-    photos: IPhoto[]
+    displayName: string;
+    username: string;
+    bio: string;
+    image: string;
+    following: boolean;
+    followersCount: number;
+    followingCount: number;
+    photos: IPhoto[];
 }
 
-
 export interface IPhoto {
-    id: any,
-    url: any,
-    isMain: boolean,
+    id: string;
+    url: string;
+    isMain: boolean;
+}
+
+export interface IUserActivity {
+    id: string;
+    title: string;
+    category: string;
+    date: Date;
 }
