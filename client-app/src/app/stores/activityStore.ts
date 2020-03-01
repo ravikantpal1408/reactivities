@@ -163,7 +163,7 @@ export default class ActivityStore {
             attendee.isHost = true;
             let attendees = [];
             attendees.push(attendee);
-            activity.userActivities = attendees;
+            activity.attendees = attendees;
             activity.comments = [];
             activity.isHost = true;
             runInAction('create activity', () => {
@@ -225,7 +225,7 @@ export default class ActivityStore {
             await agent.Activities.attend(this.activity!.id);
             runInAction(() => {
                 if (this.activity) {
-                    this.activity.userActivities.push(attendee);
+                    this.activity.attendees.push(attendee);
                     this.activity.isGoing = true;
                     this.activityRegistry.set(this.activity.id, this.activity);
                     this.loading = false;
@@ -247,7 +247,7 @@ export default class ActivityStore {
             await agent.Activities.unattend(this.activity!.id);
             runInAction(() => {
                 if (this.activity) {
-                    this.activity.userActivities = this.activity.userActivities
+                    this.activity.attendees = this.activity.attendees
                         .filter(a => a.username !== this.rootStore.userStore.user!.username);
                     this.activity.isGoing = false;
                     this.activityRegistry.set(this.activity.id, this.activity);
