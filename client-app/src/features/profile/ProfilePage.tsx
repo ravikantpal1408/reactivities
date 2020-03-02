@@ -24,6 +24,10 @@ const ProfilePage: React.FC<IProps> = ({match}) => {
         loadProfile(match.params.username);
 
     }, [loadProfile, match]);
+    
+    console.log('Profile : ', profile);
+    console.log('isCurrentUser : ', isCurrentUser);
+    
 
     if (loadingProfile) return (<LoadingComponent content='Loading Profile ...'/>);
 

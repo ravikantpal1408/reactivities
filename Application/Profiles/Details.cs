@@ -5,29 +5,26 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-namespace Application.Profiles {
-    public class Details {
-        public class Query : IRequest<Profiles> {
+namespace Application.Profiles
+{
+    public class Details
+    {
+        public class Query : IRequest<Profiles>
+        {
             public string Username { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Profiles> {
-            private readonly DataContext _context;
-
-            public Handler (DataContext context) {
-                _context = context;
+        public class Handler : IRequestHandler<Query, Profiles>
+        {
+            private readonly IProfileReader _profileReader;
+            public Handler(IProfileReader profileReader)
+            {
+                _profileReader = profileReader;
             }
 
-            public async Task<Profiles> Handle (Query request, CancellationToken cancellationToken) {
-                var user = await _context.Users.SingleOrDefaultAsync (x => x.UserName == request.Username);
-
-                return new Profiles {
-                    DisplayName = user.DisplayName,
-                        Username = user.UserName,
-                        Image = user.Photos.FirstOrDefault (x => x.IsMain)?.Url,
-                        Photos = user.Photos,
-                        Bio = user.Bio
-                };
+            public async Task<Profiles> Handle(Query request, CancellationToken cancellationToken)
+            {
+                return await _profileReader.ReadProfile(request.Username);
             }
         }
     }

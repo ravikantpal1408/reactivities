@@ -139,18 +139,13 @@ namespace API
             {
                 // app.UseDeveloperExceptionPage();
             }
-
             // app.UseHttpsRedirection();
             // app.UseDefaultFiles();
             // app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseCors("CorsPolicy");
-
             // app.UseMvc();
             app.UseEndpoints(endpoints =>
             {
