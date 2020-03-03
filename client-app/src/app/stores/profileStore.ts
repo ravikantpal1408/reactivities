@@ -15,6 +15,7 @@ export default class ProfileStore {
     @observable loadingProfile: boolean = true;
     @observable uploadingPhoto: boolean = false;
     @observable loading: boolean = false;
+    @observable followings: IProfile[] = [];
 
 
     @computed get isCurrentUser() {
@@ -165,6 +166,28 @@ export default class ProfileStore {
                 this.loading = false;
             });
         }
-    }
+    };
+
+    // loading followings
+    @action loadingFollowings = async (predicate: string) => {
+        this.loading = true;
+        try {
+            
+            const profile = await agent.Profile.listFollowings(this.profile!.username, predicate);
+            
+            runInAction(() => {
+                this.followings = profile;
+                this.loading = false;
+            });
+
+        } catch (error) {
+            console.log(error);
+            toast.error('Problem getting followers');
+            runInAction(() => {
+                this.loading = false;
+            });
+
+        }
+    };
 
 } 
