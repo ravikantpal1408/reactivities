@@ -1,5 +1,5 @@
 import {RootStore} from "./rootStore";
-import {action, computed, observable, runInAction} from "mobx";
+import {action, computed, observable, reaction, runInAction} from "mobx";
 import {IProfile, IPhoto} from "../models/profile";
 import agent from "../api/agent";
 import {toast} from "react-toastify";
@@ -9,6 +9,16 @@ export default class ProfileStore {
 
     constructor(rootStore: RootStore) {
         this.rootStore = rootStore;
+
+        // adding reaction for 
+        reaction(() => this.activeTab, activeTab => {
+            if (activeTab === 3 || activeTab === 4) {
+                const predicate = activeTab === 3 ? 'followers' : 'following';
+                this.loadingFollowings(predicate);
+            } else {
+                this.followings = [];
+            }
+        });
     }
 
     @observable profile: IProfile | null = null;
@@ -16,6 +26,7 @@ export default class ProfileStore {
     @observable uploadingPhoto: boolean = false;
     @observable loading: boolean = false;
     @observable followings: IProfile[] = [];
+    @observable activeTab: number = 0;
 
 
     @computed get isCurrentUser() {
@@ -26,6 +37,10 @@ export default class ProfileStore {
         }
     }
 
+
+    @action setActiveTab = (activeIndex: number) => {
+        this.activeTab = activeIndex;
+    };
 
     @action loadProfile = async (username: string) => {
         this.loadingProfile = true;
@@ -172,9 +187,9 @@ export default class ProfileStore {
     @action loadingFollowings = async (predicate: string) => {
         this.loading = true;
         try {
-            
+
             const profile = await agent.Profile.listFollowings(this.profile!.username, predicate);
-            
+
             runInAction(() => {
                 this.followings = profile;
                 this.loading = false;

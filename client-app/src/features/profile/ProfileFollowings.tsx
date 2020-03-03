@@ -6,11 +6,11 @@ import {observer} from "mobx-react-lite";
 
 const ProfileFollowings = () => {
     const rootStore = useContext(RootStoreContext);
-    const {profile, followings, loadingFollowings, loading} = rootStore.profileStore;
+    const {profile, followings, loading, activeTab} = rootStore.profileStore;
 
-    useEffect(() => {
-        loadingFollowings('followers');
-    }, [loadingFollowings]);
+    // useEffect(() => {
+    //     loadingFollowings('followers');
+    // }, [loadingFollowings]);
 
 
     return (
@@ -21,7 +21,7 @@ const ProfileFollowings = () => {
                         floated='left'
                         icon='user'
                         content={
-                            true ? `People following ${profile!.displayName}` : `People ${profile!.displayName} is following`
+                            activeTab === 3 ? `People following ${profile!.displayName}` : `People ${profile!.displayName} is following`
                         }
                     />
                 </Grid.Column>
