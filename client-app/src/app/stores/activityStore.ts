@@ -8,7 +8,7 @@ import {RootStore} from "./rootStore";
 import {createAttendee, setActivityProps} from "../common/util/util";
 import {HubConnection, HubConnectionBuilder, LogLevel} from "@microsoft/signalr";
 
-
+const LIMIT = 2;
 
 export default class ActivityStore {
     rootStore: RootStore;
@@ -24,6 +24,32 @@ export default class ActivityStore {
     @observable target = '';
     @observable loading = false;
     @observable.ref hubConnection: HubConnection | null = null; // this observable is for signalR
+    @observable activityCount = 0;
+    @observable page = 0;
+
+
+    @computed get totalPages() {
+        return Math.ceil(this.activityCount / LIMIT);
+    }
+
+    @computed get activitiesByDate() {
+        return this.groupActivitiesByDate(Array.from(this.activityRegistry.values()))
+    }
+
+    groupActivitiesByDate(activities: IActivity[]) {
+        const sortedActivities = activities.sort(
+            (a, b) => a.date.getTime() - b.date.getTime()
+        );
+        return Object.entries(sortedActivities.reduce((activities, activity) => {
+            const date = activity.date.toISOString().split('T')[0];
+            activities[date] = activities[date] ? [...activities[date], activity] : [activity];
+            return activities;
+        }, {} as { [key: string]: IActivity[] }));
+    }
+    
+    @action setPage = (page: number) => {
+        this.page = page;
+    };
 
 
     // create signalR hub connection 
@@ -84,20 +110,6 @@ export default class ActivityStore {
         }
     };
 
-    @computed get activitiesByDate() {
-        return this.groupActivitiesByDate(Array.from(this.activityRegistry.values()))
-    }
-
-    groupActivitiesByDate(activities: IActivity[]) {
-        const sortedActivities = activities.sort(
-            (a, b) => a.date.getTime() - b.date.getTime()
-        );
-        return Object.entries(sortedActivities.reduce((activities, activity) => {
-            const date = activity.date.toISOString().split('T')[0];
-            activities[date] = activities[date] ? [...activities[date], activity] : [activity];
-            return activities;
-        }, {} as { [key: string]: IActivity[] }));
-    }
 
     @action loadActivities = async () => {
         this.loadingInitial = true;
