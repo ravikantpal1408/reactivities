@@ -17,6 +17,8 @@ export default class ActivityStore {
         this.rootStore = rootStore;
     }
 
+
+    /* Observable props */
     @observable activityRegistry = new Map();
     @observable activity: IActivity | null = null;
     @observable loadingInitial = false;
@@ -27,7 +29,7 @@ export default class ActivityStore {
     @observable activityCount = 0;
     @observable page = 0;
 
-
+    /* Computed props */
     @computed get totalPages() {
         return Math.ceil(this.activityCount / LIMIT);
     }
@@ -46,11 +48,12 @@ export default class ActivityStore {
             return activities;
         }, {} as { [key: string]: IActivity[] }));
     }
-    
+
+
+    /* Actions props */
     @action setPage = (page: number) => {
         this.page = page;
     };
-
 
     // create signalR hub connection 
     @action createHubConnection = (activityId: string) => {
@@ -115,9 +118,10 @@ export default class ActivityStore {
         this.loadingInitial = true;
 
         try {
-            const activities = await agent.Activities.list();
+            const activityEnvelope = await agent.Activities.list(LIMIT, this.page);
 
-            console.log('my all activities : ', activities);
+            const {activities, activityCount} = activityEnvelope; // de-structuring the activities
+
             runInAction('loading activities', () => {
                 activities.forEach(activity => {
                     // setting props for activities
@@ -125,6 +129,7 @@ export default class ActivityStore {
                     this.activityRegistry.set(activity.id, activity);
 
                 });
+                this.activityCount = activityCount; // setting activity count 
                 this.loadingInitial = false;
             });
         } catch (error) {

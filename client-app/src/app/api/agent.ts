@@ -1,9 +1,9 @@
-import axios, {AxiosResponse} from 'axios';
-import {IActivity} from '../models/activity';
-import {history} from '../..';
-import {toast} from 'react-toastify';
-import {IUser, IUserFormValues} from "../models/user";
-import {IProfile, IPhoto} from "../models/profile";
+import axios, { AxiosResponse } from 'axios';
+import { IActivity, IActivitiesEnvelope } from '../models/activity';
+import { history } from '../..';
+import { toast } from 'react-toastify';
+import { IUser, IUserFormValues } from "../models/user";
+import { IProfile, IPhoto } from "../models/profile";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
@@ -20,10 +20,10 @@ axios.interceptors.response.use(undefined, error => {
     if (error.message === 'Network Error' && !error.response) {
         toast.error('Network error - make sure API is running!')
     }
-    const {status, data, config} = error.response || {status: 404, data:'', config:'' };
+    const { status, data, config } = error.response || { status: 404, data: '', config: '' };
     if (status === 401) {
         history.push('/notfound');
-        window.location.reload();
+        // window.location.reload();
         toast.error('Un - Authorized Error !!');
     }
     if (status === 404) {
@@ -55,13 +55,13 @@ const requests = {
         formData.append('File', file)
         return axios.post(url, formData,
             {
-                headers: {'Content-type': 'multipart/form-data'}
+                headers: { 'Content-type': 'multipart/form-data' }
             }).then(responseBody)
     }
 };
 
 const Activities = {
-    list: (): Promise<IActivity[]> => requests.get('/activities'),
+    list: (limit?: number, page?: number): Promise<IActivitiesEnvelope> => requests.get(`/activities?limit=${limit}&offset=${page ? page * limit! : 0}`),
     details: (id: string) => requests.get(`/activities/${id}`),
     create: (activity: IActivity) => requests.post('/activities', activity),
     update: (activity: IActivity) => requests.put(`/activities/${activity.id}`, activity),

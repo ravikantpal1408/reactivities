@@ -55,3 +55,4 @@ export interface IAttendee {
     isHost: boolean;
     following?: boolean;
 }
+
