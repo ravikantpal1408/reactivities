@@ -1,4 +1,4 @@
-import {action, computed, observable, runInAction} from 'mobx';
+import {action, computed, observable, reaction, runInAction} from 'mobx';
 import {SyntheticEvent} from 'react';
 import {IActivity} from '../models/activity';
 import agent from '../api/agent';
@@ -21,6 +21,15 @@ export default class ActivityStore {
 
     constructor(rootStore: RootStore) {
         this.rootStore = rootStore;
+        
+        reaction(
+            () => this.predicate.keys(),
+            ()=>{
+                this.page = 0;
+                this.activityRegistry.clear();
+                this.loadActivities();
+            }
+        )
     }
 
 
@@ -43,11 +52,11 @@ export default class ActivityStore {
         params.append('offset', `${this.page ? this.page * LIMIT : 0}`);
         this.predicate.forEach((value, key) => {
             if (key === 'startDate') {
-                params.append(key, value.toISOString())
+                params.append(key, value.toISOString());
             } else {
-                params.append(key, value)
+                params.append(key, value);
             }
-        })
+        });
         return params;
     }
 
@@ -148,7 +157,7 @@ export default class ActivityStore {
         this.loadingInitial = true;
 
         try {
-            const activityEnvelope = await agent.Activities.list(LIMIT, this.page);
+            const activityEnvelope = await agent.Activities.list(this.axiosParams);
 
             const {activities, activityCount} = activityEnvelope; // de-structuring the activities
 
