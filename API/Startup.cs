@@ -27,85 +27,96 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Persistence;
 
-namespace API {
-    public class Startup {
-        public Startup (IConfiguration configuration) {
+namespace API
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices (IServiceCollection services) {
+        public void ConfigureServices(IServiceCollection services)
+        {
             // added db context
-            services.AddDbContext<DataContext> (opt => {
-                opt.UseLazyLoadingProxies ();
-                opt.UseSqlite (Configuration.GetConnectionString ("DefaultConnection"));
+            services.AddDbContext<DataContext>(opt =>
+            {
+                opt.UseLazyLoadingProxies();
+                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
             });
 
             // added cors configuration
-            services.AddCors (opt => {
-                opt.AddPolicy ("CorsPolicy",
-                    policy => {
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy",
+                    policy =>
+                    {
                         policy
-                            .AllowAnyHeader ()
-                            .AllowAnyMethod ()
-                            .WithExposedHeaders ("WWW-Authenticate")
-                            .WithOrigins ("http://localhost:3000")
-                            .AllowCredentials ();
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .WithExposedHeaders("WWW-Authenticate")
+                            .WithOrigins("http://localhost:3000")
+                            .AllowCredentials();
                     });
             });
 
-            // services.AddMediatR(typeof(Login.Handler).Assembly);
-            // services.AddMediatR(assembly);
-
             // configured mediatR
-            services.AddMediatR (typeof (List.Handler).Assembly);
-            services.AddMediatR (typeof (Login.Handler).Assembly);
-            services.AddMediatR (typeof (Register.Handler).Assembly);
-            services.AddMediatR (typeof (Attend.Handler).Assembly);
-            services.AddMediatR (typeof (SetMain.Handler).Assembly);
-            services.AddSignalR ();
-            services.AddAutoMapper (typeof (List.Handler));
+            services.AddMediatR(typeof(List.Handler).Assembly);
+            services.AddMediatR(typeof(Login.Handler).Assembly);
+            services.AddMediatR(typeof(Register.Handler).Assembly);
+            services.AddMediatR(typeof(Attend.Handler).Assembly);
+            services.AddMediatR(typeof(SetMain.Handler).Assembly);
+            services.AddSignalR();
+            services.AddAutoMapper(typeof(List.Handler));
 
             // configured fluent API
-            services.AddControllers (opt => {
-                    var policy = new AuthorizationPolicyBuilder ().RequireAuthenticatedUser ().Build ();
-                    opt.Filters.Add (new AuthorizeFilter (policy));
-                })
-                .AddFluentValidation (cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Create> (); });
+            services.AddControllers(opt =>
+            {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                opt.Filters.Add(new AuthorizeFilter(policy));
+            })
+                .AddFluentValidation(cfg => { cfg.RegisterValidatorsFromAssemblyContaining<Create>(); });
 
             // setting up IDentity
-            var builder = services.AddIdentityCore<AppUser> ();
-            var identityBuilder = new IdentityBuilder (builder.UserType, builder.Services);
-            identityBuilder.AddEntityFrameworkStores<DataContext> ();
-            identityBuilder.AddSignInManager<SignInManager<AppUser>> ();
+            var builder = services.AddIdentityCore<AppUser>();
+            var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
+            identityBuilder.AddEntityFrameworkStores<DataContext>();
+            identityBuilder.AddSignInManager<SignInManager<AppUser>>();
             // services.TryAddSingleton<ISystemClock, SystemClock>();
 
-            services.AddAuthorization (opt => {
-                opt.AddPolicy ("IsActivityHost", policy => { policy.Requirements.Add (new IsHostRequirement ()); });
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("IsActivityHost", policy => { policy.Requirements.Add(new IsHostRequirement()); });
             });
 
-            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler> ();
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 
-            var key = new SymmetricSecurityKey (Encoding.UTF8.GetBytes (Configuration["TokenKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
 
             // configuration of Jwt Authentication
-            services.AddAuthentication (JwtBearerDefaults.AuthenticationScheme).AddJwtBearer (opt => {
-                opt.TokenValidationParameters = new TokenValidationParameters {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = key,
-                ValidateAudience = false,
-                ValidateIssuer = false,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero,
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+            {
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = key,
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero,
                 };
-                opt.Events = new JwtBearerEvents {
-                    OnMessageReceived = context => {
+                opt.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
                         var accessToken = context.Request.Query["access_token"];
                         var path = context.HttpContext.Request.Path;
                         // checking that request contain access token and path contain - /chat
-                        if (!string.IsNullOrEmpty (accessToken) && (path.StartsWithSegments ("/chat"))) {
+                        if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chat")))
+                        {
                             context.Token = accessToken;
                         }
 
@@ -114,31 +125,34 @@ namespace API {
                 };
             });
 
-            services.AddScoped<IJwtGenerator, JwtGenerator> ();
-            services.AddScoped<IUserAccessor, UserAccessor> ();
-            services.AddScoped<IProfileReader, ProfileReader> ();
-            services.Configure<CloudinarySettings> (Configuration.GetSection ("Cloudinary"));
-            services.AddScoped<IPhotoAccessor, PhotoAccessor> ();
+            services.AddScoped<IJwtGenerator, JwtGenerator>();
+            services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddScoped<IProfileReader, ProfileReader>();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure (IApplicationBuilder app, IWebHostEnvironment env) {
-            app.UseMiddleware<ErrorHandlingMiddleware> ();
-            if (env.IsDevelopment ()) {
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+            if (env.IsDevelopment())
+            {
                 // app.UseDeveloperExceptionPage();
             }
-            app.UseHttpsRedirection ();
-            app.UseDefaultFiles ();
-            app.UseStaticFiles ();
-            app.UseRouting ();
-            app.UseAuthentication ();
-            app.UseAuthorization ();
-            app.UseCors ("CorsPolicy");
+            app.UseHttpsRedirection();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseCors("CorsPolicy");
             // app.UseMvc();
-            app.UseEndpoints (endpoints => {
-                endpoints.MapControllers ();
-                endpoints.MapHub<ChatHub> ("/chat");
-                endpoints.MapFallbackToController ("Index", "Fallback");
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }
