@@ -20,7 +20,7 @@ axios.interceptors.response.use(undefined, error => {
     if (error.message === 'Network Error' && !error.response) {
         toast.error('Network error - make sure API is running!')
     }
-    const {status, data, config, headers} = error.response;
+    const {status, data, config} = error.response;
     
     if (status === 401 ) {
         window.localStorage.removeItem('jwt');
