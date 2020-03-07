@@ -1,4 +1,4 @@
-import {action, computed, observable, reaction, runInAction} from 'mobx';
+import {action, computed, observable, reaction, runInAction, toJS} from 'mobx';
 import {SyntheticEvent} from 'react';
 import {IActivity} from '../models/activity';
 import agent from '../api/agent';
@@ -182,7 +182,7 @@ export default class ActivityStore {
         let activity = this.getActivity(id);
         if (activity) {
             this.activity = activity;
-            return activity;
+            return toJS(activity); // toJS convert observable to simple javascript object
         } else {
             this.loadingInitial = true;
             try {
@@ -212,6 +212,7 @@ export default class ActivityStore {
     };
 
     @action createActivity = async (activity: IActivity) => {
+        console.log('this is creativity :' , activity);
         this.submitting = true;
         try {
             await agent.Activities.create(activity);

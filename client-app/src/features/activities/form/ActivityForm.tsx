@@ -73,8 +73,6 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
                 ...activity,
                 id: uuid()
             };
-
-            console.log('This is new activity form payload data :', newActivity);
             createActivity(newActivity);
         } else {
             editActivity(activity);

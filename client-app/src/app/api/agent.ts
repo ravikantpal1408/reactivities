@@ -1,9 +1,9 @@
-import axios, { AxiosResponse } from 'axios';
-import { IActivity, IActivitiesEnvelope } from '../models/activity';
-import { history } from '../..';
-import { toast } from 'react-toastify';
-import { IUser, IUserFormValues } from "../models/user";
-import { IProfile, IPhoto } from "../models/profile";
+import axios, {AxiosResponse} from 'axios';
+import {IActivity, IActivitiesEnvelope} from '../models/activity';
+import {history} from '../..';
+import {toast} from 'react-toastify';
+import {IUser, IUserFormValues} from "../models/user";
+import {IProfile, IPhoto} from "../models/profile";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
@@ -20,11 +20,12 @@ axios.interceptors.response.use(undefined, error => {
     if (error.message === 'Network Error' && !error.response) {
         toast.error('Network error - make sure API is running!')
     }
-    const { status, data, config } = error.response || { status: 404, data: '', config: '' };
-    if (status === 401) {
-        history.push('/notfound');
-        // window.location.reload();
-        toast.error('Un - Authorized Error !!');
+    const {status, data, config, headers} = error.response;
+    
+    if (status === 401 ) {
+        window.localStorage.removeItem('jwt');
+        history.push('/');
+        toast.error('Your session has expired. Please login again !!');
     }
     if (status === 404) {
         history.push('/notfound')
@@ -55,16 +56,16 @@ const requests = {
         formData.append('File', file)
         return axios.post(url, formData,
             {
-                headers: { 'Content-type': 'multipart/form-data' }
+                headers: {'Content-type': 'multipart/form-data'}
             }).then(responseBody)
     }
 };
 
 const Activities = {
-    list: (params: URLSearchParams): Promise<IActivitiesEnvelope> => 
-        axios.get('/activities', {params: params}).then(sleep(1000)).then(responseBody)    
-        ,
-        //requests.get(`/activities?limit=${limit}&offset=${page ? page * limit! : 0}`),
+    list: (params: URLSearchParams): Promise<IActivitiesEnvelope> =>
+        axios.get('/activities', {params: params}).then(sleep(1000)).then(responseBody)
+    ,
+    //requests.get(`/activities?limit=${limit}&offset=${page ? page * limit! : 0}`),
     details: (id: string) => requests.get(`/activities/${id}`),
     create: (activity: IActivity) => requests.post('/activities', activity),
     update: (activity: IActivity) => requests.put(`/activities/${activity.id}`, activity),
