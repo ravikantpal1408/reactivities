@@ -38,4 +38,5 @@ dotnet user-secrets init -p API/ <br>
 
 # for publishing
 
-dotnet publish -c Release -o publish --self-contained false Reactivities.sln
+dotnet publish -c Release -o publish --self-contained false Reactivities.sln <br>
+dotnet publish -c Release -o publish --self-contained true Reactivities.sln -r osx-x64
