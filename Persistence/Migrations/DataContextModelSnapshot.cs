@@ -20,7 +20,8 @@ namespace Persistence.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(512);
 
                     b.Property<string>("Category")
                         .HasColumnType("TEXT");
@@ -48,7 +49,8 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.AppUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(512);
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
