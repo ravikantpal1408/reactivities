@@ -17,4 +17,38 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />
     <PackageReference Include="NWebsec.AspNetCore.Middleware" Version="2.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\.DS_Store" />
+    <_ContentIncludedByDefault Remove="wwwroot\asset-manifest.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\categoryImages\culture.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\categoryImages\drinks.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\categoryImages\film.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\categoryImages\food.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\categoryImages\music.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\categoryImages\travel.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\logo.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\placeholder.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\user.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
+    <_ContentIncludedByDefault Remove="wwwroot\index.html" />
+    <_ContentIncludedByDefault Remove="wwwroot\manifest.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\precache-manifest.70ffbb84244d6c10c4f6e771b91a0425.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\service-worker.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\css\2.1e62eb29.chunk.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\css\2.1e62eb29.chunk.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\css\main.8490d254.chunk.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\css\main.8490d254.chunk.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\2.76e1f321.chunk.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\2.76e1f321.chunk.js.LICENSE.txt" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\2.76e1f321.chunk.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\main.65ad5a26.chunk.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\main.65ad5a26.chunk.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\runtime-main.18857d71.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\runtime-main.18857d71.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\media\loader-big.a770b679.gif" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\media\rw-widgets.12f0820c.woff" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\media\rw-widgets.792dcd18.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\media\rw-widgets.bc7c4a59.eot" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\media\rw-widgets.eceddf47.ttf" />
+  </ItemGroup>
 </Project>
