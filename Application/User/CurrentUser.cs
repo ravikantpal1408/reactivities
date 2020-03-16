@@ -5,17 +5,16 @@ using Application.Interfaces;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Persistence;
 
-namespace Application.Users
+namespace Application.User
 {
     public class CurrentUser
     {
-        public class Query : IRequest<User>
+        public class Query : IRequest<Users.User>
         {
         }
 
-        public class Handler : IRequestHandler<Query, User>
+        public class Handler : IRequestHandler<Query, Users.User>
         {
             private readonly UserManager<AppUser> _userManager;
             private readonly IJwtGenerator _jwtGenerator;
@@ -29,13 +28,12 @@ namespace Application.Users
                 _userAccessor = userAccessor;
             }
 
-            public async Task<User> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Users.User> Handle(Query request, CancellationToken cancellationToken)
             {
                 // handler logic goes here
-
                 var user = await _userManager.FindByNameAsync(_userAccessor.GetCurrentUsername());
 
-                return new User
+                return new Users.User
                 {
                     DisplayName = user.DisplayName,
                     Username = user.UserName,
