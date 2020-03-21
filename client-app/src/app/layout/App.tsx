@@ -57,7 +57,7 @@ const App: React.FC<RouteComponentProps> = ({location}) => {
                                     path={['/createActivity', '/manage/:id']}
                                     component={ActivityForm}
                                 />
-                                <PrivateRoute path='/profile/:username' component={ProfilePage}/>
+                                <PrivateRoute exact path='/profile/:username' component={ProfilePage}/>
                                 {/*<Route path='/login' component={LoginForm}/>*/}
                                 {/*<Route path='/register' component={RegisterForm}/>*/}
                                 <Route component={NotFound}/>
