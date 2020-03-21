@@ -74,5 +74,11 @@
     <_ContentIncludedByDefault Remove="wwwroot\static\media\outline-icons.ad97afd3.ttf" />
     <_ContentIncludedByDefault Remove="wwwroot\static\media\outline-icons.cd6c777f.woff2" />
     <_ContentIncludedByDefault Remove="wwwroot\static\media\outline-icons.ef60a4f6.woff" />
+    <_ContentIncludedByDefault Remove="wwwroot\precache-manifest.9d7447557cf5c32104d07c2a502bbf48.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\2.a236ace6.chunk.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\2.a236ace6.chunk.js.LICENSE.txt" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\2.a236ace6.chunk.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\main.9d87793d.chunk.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\js\main.9d87793d.chunk.js.map" />
   </ItemGroup>
 </Project>
