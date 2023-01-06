@@ -17,7 +17,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />
     <PackageReference Include="NWebsec.AspNetCore.Middleware" Version="2.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.0.0"/>
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.0.0"/>
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.4.0"/>
   </ItemGroup>
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\.DS_Store" />
