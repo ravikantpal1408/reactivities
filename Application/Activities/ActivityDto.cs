@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Application.Comments;
-using Newtonsoft.Json;
 
 namespace Application.Activities
 {

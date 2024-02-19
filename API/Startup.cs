@@ -71,8 +71,8 @@ namespace API
             services.AddMediatR(typeof(Register.Handler).Assembly);
             services.AddMediatR(typeof(Attend.Handler).Assembly);
             services.AddMediatR(typeof(SetMain.Handler).Assembly);
+            //services.AddAutoMapper(typeof(List.Handler).Assembly);
             services.AddSignalR();
-            services.AddAutoMapper(typeof(List.Handler));
 
             // configured fluent API
             services.AddControllers(opt =>
