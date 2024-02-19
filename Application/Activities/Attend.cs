@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Interfaces;
-using Castle.Core.Resource;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +36,7 @@ namespace Application.Activities
 
                 if (activity == null)
                 {
-                    throw new RestExceptions(HttpStatusCode.NotFound, new {activity = "could not find activity"});
+                    throw new RestExceptions(HttpStatusCode.NotFound, new { activity = "could not find activity" });
                 }
 
                 // now getting user 
@@ -52,7 +51,7 @@ namespace Application.Activities
                 if (attendance != null)
                 {
                     throw new RestExceptions(HttpStatusCode.NotFound,
-                        new {attendance = "Already attending this activity"});
+                        new { attendance = "Already attending this activity" });
                 }
 
                 attendance = new UserActivity
